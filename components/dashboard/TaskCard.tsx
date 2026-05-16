@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Check, Zap } from "lucide-react"
+import { Check } from "lucide-react"
 import type { Task } from "@/types"
 import { useAppStore } from "@/lib/store"
 import { createClient } from "@/lib/supabase/client"
@@ -18,7 +18,7 @@ const contextColors: Record<string, string> = {
   personal: "badge-personal",
 }
 
-export default function TaskCard({ task }: { task: Task }) {
+export default function TaskCard({ task, inline }: { task: Task; inline?: boolean }) {
   const { updateTask } = useAppStore()
   const [completing, setCompleting] = useState(false)
   const [done, setDone] = useState(task.status === "done")
@@ -45,7 +45,10 @@ export default function TaskCard({ task }: { task: Task }) {
       layout
       animate={{ opacity: done ? 0.5 : 1 }}
       className={cn(
-        "card-hover p-4 flex items-center gap-3 cursor-pointer group",
+        "flex items-center gap-3 group",
+        inline
+          ? "px-4 py-3 hover:bg-black/[0.02] transition-colors"
+          : "card-hover p-4 cursor-pointer",
         done && "opacity-50"
       )}
     >
@@ -76,16 +79,6 @@ export default function TaskCard({ task }: { task: Task }) {
         <span className={`pill ${contextColors[task.context_tag]}`}>
           {task.context_tag}
         </span>
-        <div className="flex items-center gap-0.5 text-xs text-ink-faint" title="Score IA">
-          <Zap size={10} className="text-accent" />
-          <span className="font-mono">{task.priority_score.toFixed(1)}</span>
-        </div>
-        <div
-          className="flex items-center gap-0.5 text-xs text-ink-faint"
-          title={`Custo energético: ${task.energy_cost}/10`}
-        >
-          <span className="font-mono">⚡{task.energy_cost}</span>
-        </div>
       </div>
     </motion.div>
   )

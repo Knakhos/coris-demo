@@ -14,7 +14,13 @@ export default function DemoPage() {
       todayCheckIn={todayCheckIn}
       recentCheckIns={DEMO_CHECK_INS}
       todayEvents={DEMO_EVENTS}
-      briefing={null}
+      briefing={{
+        id: "demo-briefing",
+        user_id: "demo-user",
+        date: format(new Date(), "yyyy-MM-dd"),
+        content: "Sua energia está acima da média esta semana — aproveite a manhã para avançar na especificação do produto antes das reuniões da tarde. A meta da meia maratona ganhou ritmo, mas os últimos 4 dias sem treino pedem atenção. Foque no que importa: uma entrega hoje vale mais do que dez amanhã.",
+        generated_at: new Date().toISOString(),
+      }}
       briefingEndpoint="/api/ai/demo-briefing"
     />
   )

@@ -142,14 +142,13 @@ Formato: narrativo, direto, analítico. 4-6 parágrafos.`,
         </motion.div>
 
         {/* KPI cards */}
-        <motion.div variants={fadeUp} className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <motion.div variants={fadeUp} className="flex justify-center gap-4 mb-8">
           {[
-            { label: "Taxa de conclusão", value: `${completionRate}%`, sub: `${tasks.filter(t => t.status === "done").length} de ${tasks.length} tarefas` },
             { label: "Energia média", value: avgEnergy, sub: "de 10" },
             { label: "Humor médio", value: avgMood, sub: "de 10" },
             { label: "Metas ativas", value: activeGoals, sub: `${completedGoals} concluídas` },
           ].map((kpi) => (
-            <div key={kpi.label} className="card p-5">
+            <div key={kpi.label} className="card p-5 w-48">
               <p className="text-xs text-ink-faint mb-2">{kpi.label}</p>
               <p className="font-display text-3xl italic">{kpi.value}</p>
               <p className="text-xs text-ink-muted mt-1">{kpi.sub}</p>
@@ -179,32 +178,10 @@ Formato: narrativo, direto, analítico. 4-6 parágrafos.`,
             )}
           </motion.div>
 
-          {/* Tasks by context */}
-          <motion.div variants={fadeUp} className="card p-5">
-            <h3 className="font-semibold text-sm mb-4">Tarefas por contexto</h3>
-            {contextTaskData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={contextTaskData} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" horizontal={false} />
-                  <XAxis type="number" tick={{ fontSize: 10 }} tickLine={false} />
-                  <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} tickLine={false} width={70} />
-                  <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
-                  <Bar dataKey="total" fill="#F0A500" radius={[0, 4, 4, 0]} name="Tarefas" />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="h-48 flex items-center justify-center text-ink-faint text-sm">
-                Nenhuma tarefa ainda
-              </div>
-            )}
-          </motion.div>
-        </div>
-
-        {/* Performance radar + patterns */}
-        <div className="grid lg:grid-cols-2 gap-6 mb-6">
+          {/* Performance radar */}
           <motion.div variants={fadeUp} className="card p-5">
             <h3 className="font-semibold text-sm mb-4">Score de performance</h3>
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={200}>
               <RadarChart data={radarData}>
                 <PolarGrid stroke="rgba(0,0,0,0.08)" />
                 <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11 }} />
@@ -212,33 +189,46 @@ Formato: narrativo, direto, analítico. 4-6 parágrafos.`,
               </RadarChart>
             </ResponsiveContainer>
           </motion.div>
-
-          <motion.div variants={fadeUp} className="card p-5">
-            <h3 className="font-semibold text-sm mb-4">Padrões identificados</h3>
-            {aiProfile?.productivity_patterns && aiProfile.productivity_patterns.length > 0 ? (
-              <div className="space-y-3">
-                {aiProfile.productivity_patterns.map((p, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <div
-                      className="w-10 h-1.5 rounded-full bg-accent flex-shrink-0 mt-1.5"
-                      style={{ opacity: p.confidence }}
-                    />
-                    <div>
-                      <p className="text-sm">{p.pattern}</p>
-                      <p className="text-xs text-ink-faint">
-                        Confiança: {(p.confidence * 100).toFixed(0)}%
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-40 text-center">
-                <p className="text-ink-faint text-sm">Padrões serão identificados conforme você usa o Coris.</p>
-              </div>
-            )}
-          </motion.div>
         </div>
+
+        {/* Patterns — full width */}
+        <motion.div variants={fadeUp} className="card p-6 mb-6">
+          <h3 className="font-semibold text-sm mb-5">Padrões identificados</h3>
+          {aiProfile?.productivity_patterns && aiProfile.productivity_patterns.length > 0 ? (
+            <div className="grid md:grid-cols-3 gap-5">
+              {aiProfile.productivity_patterns.map((p, i) => (
+                <div key={i} className="bg-white/10 rounded-xl p-4 flex flex-col gap-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm font-medium leading-snug">{p.pattern}</p>
+                    <span className="text-[10px] font-semibold text-accent flex-shrink-0 tabular-nums">
+                      {(p.confidence * 100).toFixed(0)}%
+                    </span>
+                  </div>
+                  <div className="h-1 rounded-full bg-black/[0.07] overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-accent"
+                      style={{ width: `${p.confidence * 100}%` }}
+                    />
+                  </div>
+                  {p.evidence && p.evidence.length > 0 && (
+                    <ul className="space-y-1.5 pt-1 border-t border-black/[0.06]">
+                      {p.evidence.map((e, j) => (
+                        <li key={j} className="flex items-start gap-2">
+                          <span className="w-1 h-1 rounded-full bg-accent flex-shrink-0 mt-1.5" />
+                          <span className="text-xs text-ink-muted leading-snug">{e}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-32 text-center">
+              <p className="text-ink-faint text-sm">Padrões serão identificados conforme você usa o Coris.</p>
+            </div>
+          )}
+        </motion.div>
 
         {/* Weekly Replay */}
         <motion.div variants={fadeUp} className="card p-6">

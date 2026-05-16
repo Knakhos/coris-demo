@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { Sun, CheckSquare, Target, Calendar, Sparkles, MessageCircle, AlertTriangle } from "lucide-react"
+import { Sun, CheckSquare, Target, Calendar, Sparkles, MessageCircle, AlertTriangle, Plug, BookOpen } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import type { UserProfile } from "@/types"
 import DemoChatPanel from "./DemoChatPanel"
@@ -11,10 +11,12 @@ import { cn } from "@/lib/utils/cn"
 
 const navItems = [
   { href: "/demo", icon: Sun, label: "Hoje" },
-  { href: "/demo/todos", icon: CheckSquare, label: "To-Do" },
   { href: "/demo/goals", icon: Target, label: "Metas" },
   { href: "/demo/calendar", icon: Calendar, label: "Calendário" },
+  { href: "/demo/todos", icon: CheckSquare, label: "To-Do" },
   { href: "/demo/stats", icon: Sparkles, label: "Alma" },
+  { href: "/demo/journal", icon: BookOpen, label: "Journal" },
+  { href: "/demo/connections", icon: Plug, label: "Conexões" },
 ]
 
 export default function DemoShell({
@@ -37,9 +39,9 @@ export default function DemoShell({
       className="flex h-screen overflow-hidden"
       style={{
         background: `
-          radial-gradient(circle at 108% -15%, rgba(180,180,180,0.38) 0%, rgba(200,200,200,0.18) 28%, transparent 48%),
-          radial-gradient(circle at -8% 118%, rgba(180,180,180,0.42) 0%, rgba(200,200,200,0.20) 28%, transparent 48%),
-          #E8E5E1
+          radial-gradient(ellipse 78% 65% at 102% -4%, rgba(255,90,0,0.75) 0%, rgba(255,140,0,0.32) 45%, transparent 72%),
+          radial-gradient(ellipse 64% 65% at -4% 104%, rgba(255,90,0,0.68) 0%, rgba(255,140,0,0.26) 45%, transparent 72%),
+          #FFFFFF
         `,
       }}
     >
@@ -47,7 +49,7 @@ export default function DemoShell({
       {/* Sidebar */}
       <aside className="w-52 flex flex-col py-6 bg-transparent flex-shrink-0 z-20">
         <div className="px-5 mb-8">
-          <span className="font-sans text-xl font-bold text-ink tracking-tight">Coris</span>
+          <img src="/logo.png" alt="Coris" className="w-24 h-auto object-contain" />
         </div>
         <nav className="flex-1 flex flex-col gap-0.5 px-3">
           {navItems.map((item) => {

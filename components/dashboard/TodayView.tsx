@@ -81,15 +81,18 @@ export default function TodayView(props: Props) {
                 : "Hoje"}
             </h1>
             {currentCheckIn && (
-              <div className="flex items-center gap-5 pb-0.5">
+              <div className="flex items-center gap-4 px-4 py-2.5 rounded-xl bg-white/15 backdrop-blur-sm border border-black/[0.07]">
                 {[
                   { label: "Humor", value: currentCheckIn.mood },
                   { label: "Energia", value: currentCheckIn.energy },
                   { label: "Foco", value: currentCheckIn.focus },
-                ].map((m) => (
-                  <div key={m.label} className="flex flex-col items-center">
-                    <span className="font-semibold text-lg leading-none">{m.value}</span>
-                    <span className="text-[10px] text-ink-faint mt-0.5">{m.label}</span>
+                ].map((m, i) => (
+                  <div key={m.label} className="flex items-center gap-4">
+                    <div className="flex flex-col items-center">
+                      <span className="font-semibold text-lg leading-none">{m.value}</span>
+                      <span className="text-[10px] text-ink-faint mt-0.5">{m.label}</span>
+                    </div>
+                    {i < 2 && <div className="w-px h-6 bg-black/[0.08]" />}
                   </div>
                 ))}
               </div>
@@ -99,26 +102,9 @@ export default function TodayView(props: Props) {
 
         {/* Briefing — full width */}
         <motion.div variants={fadeUp} className="mb-6">
-          <div className="bg-black/25 backdrop-blur-xl border border-black/[0.12] rounded-2xl p-6 relative overflow-hidden">
-            <div className="absolute -top-16 -right-16 w-48 h-48 bg-accent/8 rounded-full" />
-            <div className="relative">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
-                    <span className="text-ink text-[10px] font-bold">C</span>
-                  </div>
-                  <span className="text-ink/40 text-[11px] font-medium uppercase tracking-widest">
-                    Análise do dia
-                  </span>
-                </div>
-                <button
-                  onClick={refreshBriefing}
-                  disabled={briefingLoading}
-                  className="text-ink/25 hover:text-ink/50 transition-colors"
-                >
-                  <RefreshCw size={13} className={cn(briefingLoading && "animate-spin")} />
-                </button>
-              </div>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <h2 className="font-title text-lg mb-2">Briefing</h2>
               {briefingLoading ? (
                 <div className="space-y-2">
                   {[85, 70, 55].map((w, i) => (
@@ -126,7 +112,7 @@ export default function TodayView(props: Props) {
                   ))}
                 </div>
               ) : briefing ? (
-                <p className="text-ink/75 text-base font-display italic leading-relaxed">
+                <p className="text-ink/65 text-base font-display italic leading-relaxed">
                   &ldquo;{briefing.content}&rdquo;
                 </p>
               ) : (
@@ -135,13 +121,20 @@ export default function TodayView(props: Props) {
                 </p>
               )}
             </div>
+            <button
+              onClick={refreshBriefing}
+              disabled={briefingLoading}
+              className="text-ink/25 hover:text-ink/50 transition-colors mt-1 flex-shrink-0"
+            >
+              <RefreshCw size={13} className={cn(briefingLoading && "animate-spin")} />
+            </button>
           </div>
         </motion.div>
 
         {/* Body */}
-        <div className="grid lg:grid-cols-[1fr_268px] gap-5 items-start">
+        <div className="grid lg:grid-cols-[480px_1fr_1fr] gap-5 items-start">
 
-          {/* Left: check-in (se pendente) + tarefas */}
+          {/* Col 1: check-in + tarefas */}
           <div className="space-y-5">
             {!currentCheckIn && (
               <motion.div variants={fadeUp}>
@@ -149,66 +142,30 @@ export default function TodayView(props: Props) {
               </motion.div>
             )}
 
-            <motion.div variants={fadeUp}>
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="font-semibold text-sm">Tarefas prioritárias</h2>
+            <motion.div variants={fadeUp} className="card overflow-hidden">
+              <div className="flex items-center justify-between px-4 pt-4 pb-3">
+                <p className="text-[10px] font-semibold text-ink-faint uppercase tracking-wide">Tarefas prioritárias</p>
                 <div className="flex items-center gap-1 text-[11px] text-ink-faint">
                   <Zap size={10} className="text-accent" />
                   ordenado por IA
                 </div>
               </div>
               {sortedTasks.length === 0 ? (
-                <div className="card p-8 text-center">
+                <div className="px-4 pb-4">
                   <p className="text-ink-muted text-sm">Nenhuma tarefa pendente.</p>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="divide-y divide-black/[0.05]">
                   {sortedTasks.slice(0, 7).map((task, i) => (
-                    <motion.div
-                      key={task.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.04 }}
-                    >
-                      <TaskCard task={task} />
-                    </motion.div>
+                    <TaskCard key={task.id} task={task} inline />
                   ))}
                 </div>
               )}
             </motion.div>
           </div>
 
-          {/* Right: painel unificado */}
-          <motion.div variants={fadeUp} className="card overflow-hidden divide-y divide-border">
-
-            {/* Pulso */}
-            {recentCheckIns.length > 0 && (
-              <div className="p-4">
-                <p className="text-[10px] font-semibold text-ink-faint uppercase tracking-wide mb-3">
-                  Pulso — 7 dias
-                </p>
-                <div className="flex items-end gap-1 h-12">
-                  {recentCheckIns.slice(0, 7).reverse().map((ci, i) => (
-                    <div key={ci.id} className="flex-1 flex flex-col items-center gap-1">
-                      <motion.div
-                        initial={{ height: 0 }}
-                        animate={{ height: `${(ci.energy / 10) * 100}%` }}
-                        transition={{ duration: 0.5, delay: i * 0.04 }}
-                        className={cn(
-                          "w-full rounded-sm min-h-[3px]",
-                          ci.energy >= 7 ? "bg-success" : ci.energy >= 5 ? "bg-accent" : "bg-warning"
-                        )}
-                      />
-                      <span className="text-[9px] text-ink-faint capitalize">
-                        {format(new Date(ci.date), "EEE", { locale: ptBR }).slice(0, 3)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Agenda */}
+          {/* Col 2: agenda */}
+          <motion.div variants={fadeUp} className="card overflow-hidden">
             <div className="p-4">
               <p className="text-[10px] font-semibold text-ink-faint uppercase tracking-wide mb-3">
                 Agenda de hoje
@@ -233,42 +190,42 @@ export default function TodayView(props: Props) {
                 </div>
               )}
             </div>
+          </motion.div>
 
-            {/* Metas */}
-            <div className="p-4">
-              <p className="text-[10px] font-semibold text-ink-faint uppercase tracking-wide mb-3">
-                Metas ativas
-              </p>
-              {goals.length === 0 ? (
-                <p className="text-ink-faint text-sm">Nenhuma meta ativa.</p>
-              ) : (
-                <div className="space-y-3.5">
-                  {goals.slice(0, 4).map((goal) => (
-                    <div key={goal.id}>
-                      <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm leading-snug truncate flex-1">{goal.title}</p>
-                        <span className="text-xs font-medium text-ink-muted ml-2 flex-shrink-0">
-                          {goal.progress}%
-                        </span>
-                      </div>
-                      <div className="h-1 bg-surface-raised rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${goal.progress}%` }}
-                          transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-                          className="h-full bg-accent rounded-full"
-                        />
-                      </div>
-                      {goal.days_stalled > 3 && (
-                        <p className="text-[11px] text-warning mt-0.5">
-                          Parada há {goal.days_stalled}d
-                        </p>
-                      )}
+          {/* Col 3: metas */}
+          <motion.div variants={fadeUp} className="card p-4">
+            <p className="text-[10px] font-semibold text-ink-faint uppercase tracking-wide mb-3">
+              Metas ativas
+            </p>
+            {goals.length === 0 ? (
+              <p className="text-ink-faint text-sm">Nenhuma meta ativa.</p>
+            ) : (
+              <div className="space-y-3.5">
+                {goals.slice(0, 4).map((goal) => (
+                  <div key={goal.id}>
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm leading-snug truncate flex-1">{goal.title}</p>
+                      <span className="text-xs font-medium text-ink-muted ml-2 flex-shrink-0">
+                        {goal.progress}%
+                      </span>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                    <div className="h-1 bg-surface-raised rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${goal.progress}%` }}
+                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+                        className="h-full bg-accent rounded-full"
+                      />
+                    </div>
+                    {goal.days_stalled > 3 && (
+                      <p className="text-[11px] text-warning mt-0.5">
+                        Parada há {goal.days_stalled}d
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </motion.div>
         </div>
       </motion.div>

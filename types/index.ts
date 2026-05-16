@@ -46,6 +46,7 @@ export interface ProductivityPattern {
   pattern: string
   confidence: number
   observed_at: string
+  evidence?: string[]
 }
 
 export interface UserPreferences {

@@ -25,9 +25,36 @@ export const DEMO_PROFILE: UserProfile = {
     current_blockers: ["Reuniões excessivas nas tardes", "Falta de blocos de foco profundo"],
     tried_and_failed: ["Pomodoro sem consistência", "Apps de hábito que abandonou após 2 semanas"],
     productivity_patterns: [
-      { pattern: "Mais produtivo entre 9h–12h", confidence: 0.92, observed_at: new Date().toISOString() },
-      { pattern: "Tarefas criativas adiadas para tarde — horário de baixa energia", confidence: 0.85, observed_at: new Date().toISOString() },
-      { pattern: "Sextas com queda de 30% na conclusão de tarefas", confidence: 0.78, observed_at: new Date().toISOString() },
+      {
+        pattern: "Mais produtivo entre 9h–12h",
+        confidence: 0.92,
+        observed_at: new Date().toISOString(),
+        evidence: [
+          "Energia média de 8.4 nos check-ins matinais (vs 5.9 à tarde)",
+          "73% das tarefas concluídas foram iniciadas entre 9h e 12h",
+          "Foco declarado acima de 7 em 9 de 10 manhãs nos últimos 30 dias",
+        ],
+      },
+      {
+        pattern: "Tarefas criativas adiadas para a tarde — horário de baixa energia",
+        confidence: 0.85,
+        observed_at: new Date().toISOString(),
+        evidence: [
+          "Energia cai para média 5.2 após 14h nos check-ins diários",
+          "Tarefas de criatividade têm prazo médio 2.3× maior que as demais",
+          "Apenas 2 de 7 tarefas criativas concluídas foram feitas à tarde",
+        ],
+      },
+      {
+        pattern: "Sextas com queda de 30% na conclusão de tarefas",
+        confidence: 0.78,
+        observed_at: new Date().toISOString(),
+        evidence: [
+          "Taxa de conclusão nas sextas: 41% vs 71% nos outros dias",
+          "Humor médio nas sextas: 5.2 vs 7.1 da semana",
+          "Check-ins de sexta mostram energia 1.4 pontos abaixo da média semanal",
+        ],
+      },
     ],
     collapse_risk_score: 2,
     last_updated: new Date().toISOString(),
