@@ -1,7 +1,14 @@
-import { type NextRequest } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 import { updateSession } from "@/lib/supabase/middleware"
 
 export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // Demo routes bypass all auth — no Supabase needed
+  if (pathname.startsWith("/demo") || pathname.startsWith("/api/ai/demo")) {
+    return NextResponse.next()
+  }
+
   return await updateSession(request)
 }
 
