@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
-import { anthropic, MODEL } from "@/lib/anthropic/client"
-import { buildOnboardingSystemPrompt } from "@/lib/anthropic/context"
+import { getModel, getLongModel } from "@/lib/ai/client"
+import { buildOnboardingSystemPrompt } from "@/lib/ai/context"
 import { addDays, format } from "date-fns"
 
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>
@@ -28,20 +28,31 @@ export async function POST(request: NextRequest) {
         let fullText = ""
         const isComplete = detectOnboardingComplete(messages)
 
-        const response = await anthropic.messages.create({
-          model: MODEL,
-          max_tokens: 1024,
-          system: buildOnboardingSystemPrompt(),
-          messages: messages.length > 0 ? messages : [
-            { role: "user", content: "Iniciar onboarding" }
-          ],
-          stream: true,
+        const model = getModel()
+
+        const systemPrompt = buildOnboardingSystemPrompt()
+
+        const history = messages.slice(0, -1).map((m: { role: string; content: string }) => ({
+          role: m.role === "assistant" ? "model" : "user",
+          parts: [{ text: m.content }],
+        }))
+
+        const lastContent = messages.length > 0
+          ? messages[messages.length - 1]?.content
+          : "Iniciar onboarding"
+
+        const chat = model.startChat({
+          history: messages.length === 0 ? [] : history,
+          systemInstruction: systemPrompt,
         })
 
-        for await (const chunk of response) {
-          if (chunk.type === "content_block_delta" && chunk.delta.type === "text_delta") {
-            fullText += chunk.delta.text
-            send({ text: chunk.delta.text })
+        const result = await chat.sendMessageStream(lastContent)
+
+        for await (const chunk of result.stream) {
+          const text = chunk.text()
+          if (text) {
+            fullText += text
+            send({ text })
           }
         }
 
@@ -128,29 +139,27 @@ async function extractProfileFromConversation(
     .map((m) => `${m.role === "user" ? "Usuário" : "Coris"}: ${m.content}`)
     .join("\n\n")
 
-  const extraction = await anthropic.messages.create({
-    model: MODEL,
-    max_tokens: 2048,
-    system: `Extract structured user profile from the onboarding conversation.
-Return ONLY valid JSON with this exact structure (no markdown, no explanation):
+  const model = getLongModel()
+  const result = await model.generateContent(`Extraia o perfil estruturado do usuário desta conversa de onboarding.
+Retorne APENAS JSON válido neste formato exato (sem markdown, sem explicação):
 {
   "identity_contexts": [{"label": "string", "description": "string", "goals": ["string"], "energy_weight": 5}],
-  "energy_windows": [{"time_start": "string", "time_end": "string", "type": "creative", "intensity": 7}],
-  "life_goals": [{"id": "string", "title": "string", "horizon": "medium", "identity_link": "string", "progress": 0}],
+  "energy_windows": [{"time_start": "09:00", "time_end": "11:00", "type": "creative", "intensity": 7}],
+  "life_goals": [{"id": "goal-1", "title": "string", "horizon": "medium", "identity_link": "string", "progress": 0}],
   "current_blockers": ["string"],
   "tried_and_failed": ["string"],
   "productivity_patterns": [],
   "collapse_risk_score": 0,
   "last_updated": "${new Date().toISOString()}"
-}`,
-    messages: [{ role: "user", content: conversationText }],
-  })
+}
+
+Conversa:
+${conversationText}`)
 
   try {
-    const content = extraction.content[0]
-    if (content.type === "text") {
-      return JSON.parse(content.text)
-    }
+    const text = result.response.text()
+    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    if (jsonMatch) return JSON.parse(jsonMatch[0])
   } catch {}
 
   return {

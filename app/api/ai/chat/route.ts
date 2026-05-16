@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
-import { anthropic, MODEL, SYSTEM_PERSONA } from "@/lib/anthropic/client"
-import { buildUserContext } from "@/lib/anthropic/context"
+import { getModel } from "@/lib/ai/client"
+import { buildUserContext } from "@/lib/ai/context"
 import { format, subDays } from "date-fns"
 
 export async function POST(request: NextRequest) {
@@ -34,6 +34,16 @@ export async function POST(request: NextRequest) {
     todayEvents: eventsResult.data ?? [],
   })
 
+  const model = getModel()
+
+  const history = messages.slice(0, -1).map((m: { role: string; content: string }) => ({
+    role: m.role === "assistant" ? "model" : "user",
+    parts: [{ text: m.content }],
+  }))
+
+  const lastMessage = messages[messages.length - 1]
+  const userMessage = `${userContext}\n\n${lastMessage?.content ?? ""}`
+
   const encoder = new TextEncoder()
   const stream = new ReadableStream({
     async start(controller) {
@@ -42,20 +52,12 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        let fullText = ""
-        const response = await anthropic.messages.create({
-          model: MODEL,
-          max_tokens: 1024,
-          system: `${SYSTEM_PERSONA}\n\n${userContext}`,
-          messages,
-          stream: true,
-        })
+        const chat = model.startChat({ history })
+        const result = await chat.sendMessageStream(userMessage)
 
-        for await (const chunk of response) {
-          if (chunk.type === "content_block_delta" && chunk.delta.type === "text_delta") {
-            fullText += chunk.delta.text
-            send({ text: chunk.delta.text })
-          }
+        for await (const chunk of result.stream) {
+          const text = chunk.text()
+          if (text) send({ text })
         }
 
         controller.enqueue(encoder.encode("data: [DONE]\n\n"))

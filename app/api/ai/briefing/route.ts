@@ -1,9 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
-import { anthropic, MODEL, SYSTEM_PERSONA } from "@/lib/anthropic/client"
-import { buildUserContext } from "@/lib/anthropic/context"
+import { getLongModel } from "@/lib/ai/client"
+import { buildUserContext } from "@/lib/ai/context"
 import { format, subDays } from "date-fns"
-import { ptBR } from "date-fns/locale"
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient()
@@ -15,17 +14,19 @@ export async function GET(request: NextRequest) {
 
   const today = format(new Date(), "yyyy-MM-dd")
 
-  const existing = await supabase
-    .from("ai_briefings")
-    .select("*")
-    .eq("user_id", user.id)
-    .eq("date", today)
-    .order("generated_at", { ascending: false })
-    .limit(1)
-    .single()
+  if (!request.nextUrl.searchParams.get("refresh")) {
+    const existing = await supabase
+      .from("ai_briefings")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("date", today)
+      .order("generated_at", { ascending: false })
+      .limit(1)
+      .single()
 
-  if (existing.data && !request.nextUrl.searchParams.get("refresh")) {
-    return NextResponse.json({ briefing: existing.data })
+    if (existing.data) {
+      return NextResponse.json({ briefing: existing.data })
+    }
   }
 
   const [profileResult, tasksResult, goalsResult, checkInsResult] = await Promise.all([
@@ -48,33 +49,22 @@ export async function GET(request: NextRequest) {
     recentCheckIns: checkInsResult.data ?? [],
   })
 
-  const briefingPrompt = `${userContext}
+  const prompt = `${userContext}
 
-Generate a daily briefing for the user. Rules:
-- 3 to 5 lines maximum. No more.
-- In pt-BR (Brazilian Portuguese)
-- Analytical, not motivational. Ground every sentence in actual data.
-- If you notice a pattern, name it specifically. Example: "tarefas criativas empurradas para tarde" not "você tem dificuldade com criatividade"
-- If you took any action or recommendation, state it directly. "Reorganizei sua manhã." not "Sugiro reorganizar..."
-- No emojis, no exclamation points, no hollow phrases
-- Write in first-person plural perspective when referencing Coris actions ("Reorganizei", "Movi", "Protegi")
-- Tone: like a high-performance coach who has your data and respects your time`
+Gere um briefing diário para o usuário. Regras:
+- Máximo 4 linhas. Nada mais.
+- Em português brasileiro.
+- Analítico, nunca motivacional. Cada frase baseada em dados reais.
+- Se identificar um padrão, nomeie especificamente. Ex: "tarefas criativas empurradas para tarde" não "você tem dificuldade com criatividade"
+- Se tomou alguma ação ou recomendação, diga diretamente. "Reorganizei sua manhã." não "Sugiro reorganizar..."
+- Sem emojis, sem exclamações, sem frases vazias
+- Tom: coach de alta performance com seus dados, sem tempo a perder`
 
-  const response = await anthropic.messages.create({
-    model: MODEL,
-    max_tokens: 512,
-    system: SYSTEM_PERSONA,
-    messages: [{ role: "user", content: briefingPrompt }],
-  })
+  const model = getLongModel()
+  const result = await model.generateContent(prompt)
+  const briefingText = result.response.text()
 
-  const content = response.content[0]
-  if (content.type !== "text") {
-    return NextResponse.json({ error: "Failed to generate briefing" }, { status: 500 })
-  }
-
-  const briefingText = content.text
-
-  const { data: savedBriefing, error } = await supabase
+  const { data: savedBriefing } = await supabase
     .from("ai_briefings")
     .insert({
       user_id: user.id,
@@ -85,9 +75,5 @@ Generate a daily briefing for the user. Rules:
     .select()
     .single()
 
-  if (error) {
-    return NextResponse.json({ briefing: { content: briefingText, date: today } })
-  }
-
-  return NextResponse.json({ briefing: savedBriefing })
+  return NextResponse.json({ briefing: savedBriefing ?? { content: briefingText, date: today } })
 }
