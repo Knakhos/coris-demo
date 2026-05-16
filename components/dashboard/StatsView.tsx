@@ -134,7 +134,10 @@ Formato: narrativo, direto, analítico. 4-6 parágrafos.`,
     <div className="max-w-6xl px-8 py-8">
       <motion.div initial="hidden" animate="visible" variants={stagger}>
         <motion.div variants={fadeUp} className="mb-8">
-          <h1 className="font-title text-4xl font-bold tracking-tight">Alma</h1>
+          <div className="flex items-baseline gap-4">
+            <h1 className="font-title text-4xl font-bold tracking-tight">Alma</h1>
+            <p className="font-title text-xl italic text-ink-faint">&ldquo;o que está no centro de tudo&rdquo;</p>
+          </div>
           <p className="text-ink-muted text-sm mt-1">Últimos 30 dias</p>
         </motion.div>
 
