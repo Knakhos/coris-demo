@@ -1,6 +1,7 @@
 export interface UserProfile {
   id: string
   email: string
+  full_name?: string
   created_at: string
   onboarding_completed: boolean
   shadow_mode_ends_at: string | null

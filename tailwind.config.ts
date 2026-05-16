@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         display: ["Instrument Serif", "Georgia", "serif"],
+        title: ["Bricolage Grotesque", "DM Sans", "system-ui", "sans-serif"],
         sans: ["DM Sans", "system-ui", "sans-serif"],
       },
       colors: {
@@ -17,9 +18,9 @@ const config: Config = {
         ink: "#0A0A0A",
         "ink-muted": "#6B6B6B",
         "ink-faint": "#A8A8A8",
-        accent: "#2563EB",
-        "accent-light": "#EEF4FF",
-        "accent-dim": "#93C5FD",
+        accent: "#F0A500",
+        "accent-light": "#FEF3C7",
+        "accent-dim": "#FDE68A",
         border: "rgba(0,0,0,0.08)",
         "border-strong": "rgba(0,0,0,0.14)",
         surface: "#FFFFFF",

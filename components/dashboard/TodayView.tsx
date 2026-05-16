@@ -74,8 +74,8 @@ export default function TodayView(props: Props) {
         {/* Header */}
         <motion.div variants={fadeUp} className="mb-8">
           <p className="text-ink-faint text-sm capitalize">{today}</p>
-          <h1 className="font-display text-4xl mt-1">
-            {profile ? `Bom dia.` : "Hoje"}
+          <h1 className="font-title text-4xl font-bold mt-1 tracking-tight">
+            {profile ? `Bom dia, ${profile.full_name ?? profile.email.split("@")[0]}.` : "Hoje"}
           </h1>
         </motion.div>
 

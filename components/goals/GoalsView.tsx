@@ -71,7 +71,7 @@ export default function GoalsView({ initialGoals }: { initialGoals: Goal[] }) {
     <div className="max-w-4xl mx-auto px-6 py-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-display text-4xl">Metas</h1>
+          <h1 className="font-title text-4xl font-bold tracking-tight">Metas</h1>
           <p className="text-ink-muted text-sm mt-1">
             {activeGoals.length} ativas · {goals.filter((g) => g.status === "completed").length} concluídas
           </p>

@@ -87,7 +87,7 @@ export default function TodosView({ initialTasks, goals, currentEnergy }: Props)
     <div className="max-w-3xl mx-auto px-6 py-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-display text-4xl">To-Do</h1>
+          <h1 className="font-title text-4xl font-bold tracking-tight">To-Do</h1>
           <p className="text-ink-muted text-sm mt-1">
             {pendingCount} pendentes · {doneCount} concluídas
           </p>

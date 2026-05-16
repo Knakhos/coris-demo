@@ -34,32 +34,27 @@ export default function DemoShell({
 
   return (
     <div className="flex h-screen overflow-hidden bg-base">
-      {/* Demo banner */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-accent text-white text-xs font-medium text-center py-1.5">
-        Modo Demo — dados fictícios, IA real
-      </div>
-
       {/* Sidebar */}
-      <aside className="w-[60px] flex flex-col items-center py-5 border-r border-border bg-white flex-shrink-0 z-20 mt-7">
-        <div className="mb-8">
-          <span className="font-display text-lg italic text-ink">C</span>
+      <aside className="w-52 flex flex-col py-6 border-r border-border bg-white flex-shrink-0 z-20">
+        <div className="px-5 mb-8">
+          <span className="font-title text-xl font-bold text-ink tracking-tight">Coris</span>
         </div>
-        <nav className="flex-1 flex flex-col items-center gap-1">
+        <nav className="flex-1 flex flex-col gap-0.5 px-3">
           {navItems.map((item) => {
             const isActive = pathname === item.href
             return (
               <a
                 key={item.href}
                 href={item.href}
-                title={item.label}
                 className={cn(
-                  "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-150",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 text-sm font-medium",
                   isActive
-                    ? "bg-accent text-white shadow-sm"
-                    : "text-ink-faint hover:bg-surface-raised hover:text-ink"
+                    ? "bg-accent text-ink font-semibold"
+                    : "text-ink-muted hover:bg-surface-raised hover:text-ink"
                 )}
               >
-                <item.icon size={18} />
+                <item.icon size={17} className="flex-shrink-0" />
+                <span>{item.label}</span>
               </a>
             )
           })}
@@ -67,7 +62,7 @@ export default function DemoShell({
       </aside>
 
       {/* Main */}
-      <main className="flex-1 overflow-y-auto mt-7">
+      <main className="flex-1 overflow-y-auto">
         <motion.div
           key={pathname}
           initial={{ opacity: 0, y: 8 }}
@@ -80,7 +75,7 @@ export default function DemoShell({
 
       {/* Crisis mode banner */}
       {isCrisisMode && (
-        <div className="fixed top-7 left-[60px] right-0 z-30 bg-danger text-white px-6 py-3 flex items-center justify-between">
+        <div className="fixed top-0 left-52 right-0 z-30 bg-danger text-white px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <AlertTriangle size={16} />
             <span className="text-sm font-medium">Modo de Crise ativo</span>
@@ -106,7 +101,7 @@ export default function DemoShell({
         onClick={() => setIsChatOpen(!isChatOpen)}
         className={cn(
           "fixed bottom-6 right-6 z-40 w-14 h-14 rounded-2xl shadow-float flex items-center justify-center transition-all",
-          isChatOpen ? "bg-ink text-white" : "bg-accent text-white hover:bg-blue-700"
+          isChatOpen ? "bg-ink text-white" : "bg-accent text-ink hover:bg-amber-500"
         )}
       >
         <MessageCircle size={22} />
