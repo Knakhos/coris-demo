@@ -10,7 +10,6 @@ const config: Config = {
     extend: {
       fontFamily: {
         display: ["Instrument Serif", "Georgia", "serif"],
-        title: ["Bricolage Grotesque", "DM Sans", "system-ui", "sans-serif"],
         sans: ["DM Sans", "system-ui", "sans-serif"],
       },
       colors: {

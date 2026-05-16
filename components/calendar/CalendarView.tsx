@@ -94,7 +94,7 @@ export default function CalendarView({ events: initialEvents, tasks }: Props) {
   return (
     <div className="max-w-5xl mx-auto px-6 py-8">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="font-title text-4xl font-bold tracking-tight">Calendário</h1>
+        <h1 className="font-sans text-4xl font-bold tracking-tight">Calendário</h1>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
           className="btn-primary flex items-center gap-2"

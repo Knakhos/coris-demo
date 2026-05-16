@@ -37,7 +37,7 @@ export default function DemoShell({
       {/* Sidebar */}
       <aside className="w-52 flex flex-col py-6 border-r border-border bg-white flex-shrink-0 z-20">
         <div className="px-5 mb-8">
-          <span className="font-title text-xl font-bold text-ink tracking-tight">Coris</span>
+          <span className="font-sans text-xl font-bold text-ink tracking-tight">Coris</span>
         </div>
         <nav className="flex-1 flex flex-col gap-0.5 px-3">
           {navItems.map((item) => {
