@@ -20,6 +20,7 @@ export default function DemoPage() {
         date: format(new Date(), "yyyy-MM-dd"),
         content: "Sua energia está acima da média esta semana — aproveite a manhã para avançar na especificação do produto antes das reuniões da tarde. A meta da meia maratona ganhou ritmo, mas os últimos 4 dias sem treino pedem atenção. Foque no que importa: uma entrega hoje vale mais do que dez amanhã.",
         generated_at: new Date().toISOString(),
+        trigger: "morning",
       }}
       briefingEndpoint="/api/ai/demo-briefing"
     />
