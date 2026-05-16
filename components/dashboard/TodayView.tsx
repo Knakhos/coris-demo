@@ -77,7 +77,7 @@ export default function TodayView(props: Props) {
           <div className="flex items-end justify-between gap-4">
             <h1 className="font-title text-4xl font-bold tracking-tight leading-none">
               {profile
-                ? `Bom dia, ${profile.full_name ?? profile.email.split("@")[0]}.`
+                ? `Boa tarde, ${profile.full_name ?? profile.email.split("@")[0]}.`
                 : "Hoje"}
             </h1>
             {currentCheckIn && (

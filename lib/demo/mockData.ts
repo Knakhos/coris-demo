@@ -4,7 +4,7 @@ import { format, addDays, subDays } from "date-fns"
 export const DEMO_PROFILE: UserProfile = {
   id: "demo-user",
   email: "demo@coris.app",
-  full_name: "Knakhos",
+  full_name: "Inteli",
   created_at: new Date().toISOString(),
   onboarding_completed: true,
   shadow_mode_ends_at: null,
