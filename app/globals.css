@@ -60,11 +60,11 @@
   }
 
   .card {
-    @apply bg-white/35 backdrop-blur-2xl border border-white/50 rounded-2xl shadow-card;
+    @apply bg-white/15 backdrop-blur-2xl border border-white/80 rounded-2xl shadow-card;
   }
 
   .card-hover {
-    @apply card transition-all duration-200 hover:bg-white/50 hover:shadow-card-hover;
+    @apply card transition-all duration-200 hover:bg-white/25 hover:shadow-card-hover;
   }
 
   .btn-primary {

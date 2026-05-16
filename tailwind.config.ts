@@ -33,8 +33,8 @@ const config: Config = {
         "warning-light": "#FFFBEB",
       },
       boxShadow: {
-        card: "0 2px 16px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.85)",
-        "card-hover": "0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)",
+        card: "0 1px 12px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6)",
+        "card-hover": "0 4px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.7)",
         float: "0 8px 40px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.7)",
         modal: "0 24px 64px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.08)",
       },
