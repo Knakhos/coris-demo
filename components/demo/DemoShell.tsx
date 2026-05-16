@@ -34,7 +34,7 @@ export default function DemoShell({
 
   return (
     <div className="flex h-screen overflow-hidden relative">
-      {/* Gradiente laranja ambiente — como sketch.com */}
+      {/* Gradiente laranja — canto superior direito */}
       <div
         aria-hidden
         className="fixed pointer-events-none z-0"
@@ -45,6 +45,20 @@ export default function DemoShell({
           height: "860px",
           borderRadius: "50%",
           background: "radial-gradient(circle at center, rgba(255,112,36,0.22) 0%, rgba(255,145,60,0.10) 42%, transparent 68%)",
+        }}
+      />
+
+      {/* Gradiente laranja — canto inferior esquerdo */}
+      <div
+        aria-hidden
+        className="fixed pointer-events-none z-0"
+        style={{
+          bottom: "-260px",
+          left: "-260px",
+          width: "780px",
+          height: "780px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle at center, rgba(255,120,40,0.18) 0%, rgba(255,150,70,0.08) 44%, transparent 68%)",
         }}
       />
 
