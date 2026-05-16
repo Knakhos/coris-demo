@@ -44,7 +44,7 @@ export default function DemoShell({
           width: "860px",
           height: "860px",
           borderRadius: "50%",
-          background: "radial-gradient(circle at center, rgba(255,112,36,0.42) 0%, rgba(255,145,60,0.20) 42%, transparent 68%)",
+          background: "radial-gradient(circle at center, rgba(255,112,36,0.32) 0%, rgba(255,145,60,0.14) 42%, transparent 68%)",
         }}
       />
 
