@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         display: ["Instrument Serif", "Georgia", "serif"],
+        title: ["Plus Jakarta Sans", "DM Sans", "system-ui", "sans-serif"],
         sans: ["DM Sans", "system-ui", "sans-serif"],
       },
       colors: {

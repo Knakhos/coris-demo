@@ -105,7 +105,7 @@ export default function CalendarView({ events: initialEvents, tasks }: Props) {
     <div className="px-8 py-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-sans text-4xl font-bold tracking-tight">Calendário</h1>
+        <h1 className="font-title text-4xl font-bold tracking-tight">Calendário</h1>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
           className="btn-primary flex items-center gap-2"
@@ -204,8 +204,8 @@ export default function CalendarView({ events: initialEvents, tasks }: Props) {
             ))}
           </div>
 
-          {/* Day cells */}
-          <div className="grid grid-cols-7 gap-1">
+          {/* Day cells — separados por linhas, sem caixas */}
+          <div className="grid grid-cols-7 border-l border-t border-black/[0.06]">
             {days.map((day) => {
               const dayEvents = getDayEvents(day)
               const isSelected = selectedDay && isSameDay(day, selectedDay)
@@ -213,29 +213,27 @@ export default function CalendarView({ events: initialEvents, tasks }: Props) {
               const todayDay = isToday(day)
 
               return (
-                <motion.button
+                <button
                   key={day.toISOString()}
                   onClick={() => setSelectedDay(day)}
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.12 }}
                   className={cn(
-                    "rounded-xl p-2 min-h-[88px] text-left transition-all duration-150",
-                    "bg-white/45 backdrop-blur-sm border border-white/60",
-                    "hover:bg-white/70 hover:border-white/80",
-                    !isCurrentMonth && "opacity-35",
-                    isSelected && "bg-accent/12 border-accent/40 shadow-sm ring-1 ring-accent/20"
+                    "border-r border-b border-black/[0.06] p-2 min-h-[88px] text-left",
+                    "hover:bg-white/30 transition-colors duration-150",
+                    !isCurrentMonth && "opacity-30",
+                    isSelected && "bg-accent/10"
                   )}
                 >
-                  <span className={cn(
-                    "text-xs font-medium w-6 h-6 flex items-center justify-center rounded-full mb-1.5 transition-all",
-                    todayDay && "bg-accent text-ink font-semibold",
-                    !todayDay && isSelected && "text-ink font-semibold",
-                    !todayDay && !isSelected && !isCurrentMonth && "text-ink-faint",
-                    !todayDay && !isSelected && isCurrentMonth && "text-ink-muted"
-                  )}>
-                    {format(day, "d")}
-                  </span>
+                  {/* Número no canto superior direito */}
+                  <div className="flex justify-end mb-1.5">
+                    <span className={cn(
+                      "text-xs font-medium w-6 h-6 flex items-center justify-center rounded-full transition-all",
+                      todayDay && "bg-accent text-ink font-semibold",
+                      !todayDay && isCurrentMonth && "text-ink-muted",
+                      !todayDay && !isCurrentMonth && "text-ink-faint"
+                    )}>
+                      {format(day, "d")}
+                    </span>
+                  </div>
                   <div className="space-y-0.5">
                     {dayEvents.slice(0, 2).map((e) => (
                       <div
@@ -249,12 +247,12 @@ export default function CalendarView({ events: initialEvents, tasks }: Props) {
                       </div>
                     ))}
                     {dayEvents.length > 2 && (
-                      <div className="text-[10px] text-ink-faint pl-1">
+                      <div className="text-[10px] text-ink-faint pl-0.5">
                         +{dayEvents.length - 2}
                       </div>
                     )}
                   </div>
-                </motion.button>
+                </button>
               )
             })}
           </div>

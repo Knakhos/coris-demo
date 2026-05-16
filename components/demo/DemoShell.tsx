@@ -33,11 +33,25 @@ export default function DemoShell({
   }, [profile, setProfile])
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden relative">
+      {/* Gradiente laranja ambiente — como sketch.com */}
+      <div
+        aria-hidden
+        className="fixed pointer-events-none z-0"
+        style={{
+          top: "-280px",
+          right: "-280px",
+          width: "860px",
+          height: "860px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle at center, rgba(255,112,36,0.22) 0%, rgba(255,145,60,0.10) 42%, transparent 68%)",
+        }}
+      />
+
       {/* Sidebar */}
-      <aside className="w-52 flex flex-col py-6 border-r border-white/50 bg-white/50 backdrop-blur-2xl flex-shrink-0 z-20">
+      <aside className="w-52 flex flex-col py-6 border-r border-white/40 bg-white/40 backdrop-blur-2xl flex-shrink-0 z-20">
         <div className="px-5 mb-8">
-          <span className="font-sans text-xl font-bold text-ink tracking-tight">Coris</span>
+          <span className="font-title text-xl font-bold text-ink tracking-tight">Coris</span>
         </div>
         <nav className="flex-1 flex flex-col gap-0.5 px-3">
           {navItems.map((item) => {
