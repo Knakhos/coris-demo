@@ -39,7 +39,7 @@ export default function DemoShell({
         background: `
           radial-gradient(circle at 108% -15%, rgba(180,180,180,0.38) 0%, rgba(200,200,200,0.18) 28%, transparent 48%),
           radial-gradient(circle at -8% 118%, rgba(180,180,180,0.42) 0%, rgba(200,200,200,0.20) 28%, transparent 48%),
-          #F8F6F3
+          #E8E5E1
         `,
       }}
     >
