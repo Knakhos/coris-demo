@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { Sun, CheckSquare, Target, Calendar, BarChart3, MessageCircle, AlertTriangle } from "lucide-react"
+import { Sun, CheckSquare, Target, Calendar, Sparkles, MessageCircle, AlertTriangle } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import type { UserProfile } from "@/types"
 import DemoChatPanel from "./DemoChatPanel"
@@ -14,7 +14,7 @@ const navItems = [
   { href: "/demo/todos", icon: CheckSquare, label: "To-Do" },
   { href: "/demo/goals", icon: Target, label: "Metas" },
   { href: "/demo/calendar", icon: Calendar, label: "Calendário" },
-  { href: "/demo/stats", icon: BarChart3, label: "Alma" },
+  { href: "/demo/stats", icon: Sparkles, label: "Alma" },
 ]
 
 export default function DemoShell({
