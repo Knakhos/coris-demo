@@ -6,7 +6,7 @@ import { format, subDays } from "date-fns"
 import { ptBR } from "date-fns/locale"
 
 export async function GET(request: NextRequest) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {

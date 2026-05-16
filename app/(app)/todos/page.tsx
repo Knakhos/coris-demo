@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import TodosView from "@/components/dashboard/TodosView"
 
 export default async function TodosPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   const [{ data: tasks }, { data: goals }, { data: todayCheckIn }] = await Promise.all([

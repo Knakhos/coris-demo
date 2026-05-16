@@ -4,7 +4,7 @@ import { ptBR } from "date-fns/locale"
 import TodayView from "@/components/dashboard/TodayView"
 
 export default async function DashboardPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   const today = format(new Date(), "yyyy-MM-dd")

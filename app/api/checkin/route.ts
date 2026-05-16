@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 import { format } from "date-fns"
 
 export async function POST(request: NextRequest) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
@@ -58,7 +58,7 @@ export async function GET() {
 }
 
 async function updateCollapseRisk(
-  supabase: ReturnType<typeof createClient>,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   userId: string
 ) {
   const { data: recentCheckIns } = await supabase

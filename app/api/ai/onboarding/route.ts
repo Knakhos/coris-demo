@@ -4,8 +4,10 @@ import { anthropic, MODEL } from "@/lib/anthropic/client"
 import { buildOnboardingSystemPrompt } from "@/lib/anthropic/context"
 import { addDays, format } from "date-fns"
 
+type SupabaseClient = Awaited<ReturnType<typeof createClient>>
+
 export async function POST(request: NextRequest) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
@@ -50,7 +52,7 @@ export async function POST(request: NextRequest) {
 
         await saveOnboardingSession(supabase, user.id, [
           ...messages,
-          { role: "assistant", content: fullText }
+          { role: "assistant", content: fullText },
         ])
 
         controller.enqueue(encoder.encode("data: [DONE]\n\n"))
@@ -81,7 +83,7 @@ function detectOnboardingCompleteInResponse(text: string): boolean {
 }
 
 async function saveOnboardingSession(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient,
   userId: string,
   messages: Array<{ role: string; content: string }>
 ) {
@@ -93,13 +95,12 @@ async function saveOnboardingSession(
 }
 
 async function finalizeOnboarding(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient,
   userId: string,
   messages: Array<{ role: string; content: string }>,
   lastResponse: string
 ) {
   const shadowModeEnd = format(addDays(new Date(), 7), "yyyy-MM-dd'T'HH:mm:ssxxx")
-
   const extractedProfile = await extractProfileFromConversation(messages)
 
   await Promise.all([
@@ -133,11 +134,11 @@ async function extractProfileFromConversation(
     system: `Extract structured user profile from the onboarding conversation.
 Return ONLY valid JSON with this exact structure (no markdown, no explanation):
 {
-  "identity_contexts": [{"label": string, "description": string, "goals": string[], "energy_weight": number}],
-  "energy_windows": [{"time_start": string, "time_end": string, "type": "creative"|"mechanical"|"social"|"recovery", "intensity": number}],
-  "life_goals": [{"id": string, "title": string, "horizon": "short"|"medium"|"long", "identity_link": string, "progress": 0}],
-  "current_blockers": string[],
-  "tried_and_failed": string[],
+  "identity_contexts": [{"label": "string", "description": "string", "goals": ["string"], "energy_weight": 5}],
+  "energy_windows": [{"time_start": "string", "time_end": "string", "type": "creative", "intensity": 7}],
+  "life_goals": [{"id": "string", "title": "string", "horizon": "medium", "identity_link": "string", "progress": 0}],
+  "current_blockers": ["string"],
+  "tried_and_failed": ["string"],
   "productivity_patterns": [],
   "collapse_risk_score": 0,
   "last_updated": "${new Date().toISOString()}"

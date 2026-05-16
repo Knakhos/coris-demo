@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import GoalsView from "@/components/goals/GoalsView"
 
 export default async function GoalsPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   const { data: goals } = await supabase

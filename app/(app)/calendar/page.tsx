@@ -3,7 +3,7 @@ import { format, startOfMonth, endOfMonth } from "date-fns"
 import CalendarView from "@/components/calendar/CalendarView"
 
 export default async function CalendarPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   const monthStart = format(startOfMonth(new Date()), "yyyy-MM-dd'T'00:00:00")

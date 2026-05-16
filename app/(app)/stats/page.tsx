@@ -3,7 +3,7 @@ import { format, subDays, startOfWeek, endOfWeek } from "date-fns"
 import StatsView from "@/components/dashboard/StatsView"
 
 export default async function StatsPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   const thirtyDaysAgo = format(subDays(new Date(), 30), "yyyy-MM-dd")
