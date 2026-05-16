@@ -27,10 +27,11 @@ interface Props {
   recentCheckIns: CheckIn[]
   todayEvents: CalendarEvent[]
   briefing: AIDailyBriefing | null
+  briefingEndpoint?: string
 }
 
 export default function TodayView(props: Props) {
-  const { profile, tasks, goals, todayCheckIn, recentCheckIns, todayEvents } = props
+  const { profile, tasks, goals, todayCheckIn, recentCheckIns, todayEvents, briefingEndpoint = "/api/ai/briefing" } = props
   const [briefing, setBriefing] = useState(props.briefing)
   const [briefingLoading, setBriefingLoading] = useState(!props.briefing)
   const [currentCheckIn, setCurrentCheckIn] = useState(todayCheckIn)
@@ -47,7 +48,7 @@ export default function TodayView(props: Props) {
   async function fetchBriefing() {
     setBriefingLoading(true)
     try {
-      const res = await fetch("/api/ai/briefing")
+      const res = await fetch(briefingEndpoint)
       const data = await res.json()
       setBriefing(data.briefing)
     } finally {
@@ -58,7 +59,7 @@ export default function TodayView(props: Props) {
   async function refreshBriefing() {
     setBriefingLoading(true)
     try {
-      const res = await fetch("/api/ai/briefing?refresh=1")
+      const res = await fetch(`${briefingEndpoint}?refresh=1`)
       const data = await res.json()
       setBriefing(data.briefing)
     } finally {

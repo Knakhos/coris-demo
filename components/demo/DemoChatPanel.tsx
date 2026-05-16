@@ -112,7 +112,7 @@ export default function DemoChatPanel({
           <div className="flex items-center justify-between px-5 py-4 border-b border-border">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center">
-                <span className="text-white text-xs font-bold">C</span>
+                <span className="text-ink text-xs font-bold">C</span>
               </div>
               <div>
                 <p className="text-sm font-semibold">Coris</p>
@@ -185,7 +185,7 @@ export default function DemoChatPanel({
                            placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent"
               />
               <button onClick={handleSend} disabled={!input.trim() || loading || isTyping}
-                className="w-10 h-10 rounded-xl bg-accent text-white flex items-center justify-center hover:bg-blue-700 transition-colors disabled:opacity-40">
+                className="w-10 h-10 rounded-xl bg-accent text-ink flex items-center justify-center hover:bg-amber-500 transition-colors disabled:opacity-40">
                 <Send size={15} />
               </button>
             </div>

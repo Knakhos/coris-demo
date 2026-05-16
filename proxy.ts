@@ -5,7 +5,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Demo routes bypass all auth — no Supabase needed
-  if (pathname.startsWith("/demo") || pathname.startsWith("/api/ai/demo")) {
+  if (pathname.startsWith("/demo") || pathname.startsWith("/api/ai/demo") || pathname.startsWith("/api/ai/demo-briefing")) {
     return NextResponse.next()
   }
 

@@ -15,6 +15,7 @@ export default function DemoPage() {
       recentCheckIns={DEMO_CHECK_INS}
       todayEvents={DEMO_EVENTS}
       briefing={null}
+      briefingEndpoint="/api/ai/demo-briefing"
     />
   )
 }
