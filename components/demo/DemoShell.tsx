@@ -33,34 +33,16 @@ export default function DemoShell({
   }, [profile, setProfile])
 
   return (
-    <div className="flex h-screen overflow-hidden relative">
-      {/* Gradiente laranja — canto superior direito */}
-      <div
-        aria-hidden
-        className="fixed pointer-events-none z-0"
-        style={{
-          top: "-280px",
-          right: "-280px",
-          width: "860px",
-          height: "860px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle at center, rgba(180,180,180,0.32) 0%, rgba(200,200,200,0.14) 42%, transparent 68%)",
-        }}
-      />
-
-      {/* Gradiente laranja — canto inferior esquerdo */}
-      <div
-        aria-hidden
-        className="fixed pointer-events-none z-0"
-        style={{
-          bottom: "-260px",
-          left: "-260px",
-          width: "780px",
-          height: "780px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle at center, rgba(180,180,180,0.36) 0%, rgba(200,200,200,0.16) 44%, transparent 68%)",
-        }}
-      />
+    <div
+      className="flex h-screen overflow-hidden"
+      style={{
+        background: `
+          radial-gradient(circle at 108% -15%, rgba(180,180,180,0.38) 0%, rgba(200,200,200,0.18) 28%, transparent 48%),
+          radial-gradient(circle at -8% 118%, rgba(180,180,180,0.42) 0%, rgba(200,200,200,0.20) 28%, transparent 48%),
+          #F8F6F3
+        `,
+      }}
+    >
 
       {/* Sidebar */}
       <aside className="w-52 flex flex-col py-6 bg-transparent flex-shrink-0 z-20">
