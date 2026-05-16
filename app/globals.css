@@ -64,7 +64,7 @@
   }
 
   .card-hover {
-    @apply card transition-all duration-200 hover:bg-white/18 hover:shadow-card-hover;
+    @apply card transition-all duration-200 hover:bg-white/20 hover:shadow-card-hover;
   }
 
   .btn-primary {
