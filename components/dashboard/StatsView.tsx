@@ -165,7 +165,7 @@ Formato: narrativo, direto, analítico. 4-6 parágrafos.`,
                   <XAxis dataKey="date" tick={{ fontSize: 10 }} tickLine={false} />
                   <YAxis domain={[0, 10]} tick={{ fontSize: 10 }} tickLine={false} />
                   <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid rgba(0,0,0,0.08)" }} />
-                  <Line type="monotone" dataKey="energia" stroke="#2563EB" strokeWidth={2} dot={false} name="Energia" />
+                  <Line type="monotone" dataKey="energia" stroke="#F0A500" strokeWidth={2} dot={false} name="Energia" />
                   <Line type="monotone" dataKey="humor" stroke="#10B981" strokeWidth={2} dot={false} name="Humor" />
                 </LineChart>
               </ResponsiveContainer>
@@ -186,7 +186,7 @@ Formato: narrativo, direto, analítico. 4-6 parágrafos.`,
                   <XAxis type="number" tick={{ fontSize: 10 }} tickLine={false} />
                   <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} tickLine={false} width={70} />
                   <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
-                  <Bar dataKey="total" fill="#2563EB" radius={[0, 4, 4, 0]} name="Tarefas" />
+                  <Bar dataKey="total" fill="#F0A500" radius={[0, 4, 4, 0]} name="Tarefas" />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
@@ -205,7 +205,7 @@ Formato: narrativo, direto, analítico. 4-6 parágrafos.`,
               <RadarChart data={radarData}>
                 <PolarGrid stroke="rgba(0,0,0,0.08)" />
                 <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11 }} />
-                <Radar name="Score" dataKey="A" stroke="#2563EB" fill="#2563EB" fillOpacity={0.15} strokeWidth={2} />
+                <Radar name="Score" dataKey="A" stroke="#F0A500" fill="#F0A500" fillOpacity={0.15} strokeWidth={2} />
               </RadarChart>
             </ResponsiveContainer>
           </motion.div>

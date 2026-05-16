@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import { RefreshCw, Clock, Zap } from "lucide-react"
+import { RefreshCw, Zap } from "lucide-react"
 import type { UserProfile, Task, Goal, CheckIn, CalendarEvent, AIDailyBriefing } from "@/types"
 import CheckInWidget from "./CheckInWidget"
 import TaskCard from "./TaskCard"
@@ -41,9 +41,7 @@ export default function TodayView(props: Props) {
   const sortedTasks = sortTasksByPriority(pendingTasks, currentEnergy)
 
   useEffect(() => {
-    if (!briefing) {
-      fetchBriefing()
-    }
+    if (!briefing) fetchBriefing()
   }, [])
 
   async function fetchBriefing() {
@@ -69,89 +67,105 @@ export default function TodayView(props: Props) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
+    <div className="px-8 py-8 max-w-5xl mx-auto">
       <motion.div initial="hidden" animate="visible" variants={stagger}>
+
         {/* Header */}
-        <motion.div variants={fadeUp} className="mb-8">
-          <p className="text-ink-faint text-sm capitalize">{today}</p>
-          <h1 className="font-sans text-4xl font-bold mt-1 tracking-tight">
-            {profile ? `Bom dia, ${profile.full_name ?? profile.email.split("@")[0]}.` : "Hoje"}
-          </h1>
+        <motion.div variants={fadeUp} className="mb-6">
+          <p className="text-ink-faint text-sm capitalize mb-1">{today}</p>
+          <div className="flex items-end justify-between gap-4">
+            <h1 className="font-sans text-4xl font-bold tracking-tight leading-none">
+              {profile
+                ? `Bom dia, ${profile.full_name ?? profile.email.split("@")[0]}.`
+                : "Hoje"}
+            </h1>
+            {currentCheckIn && (
+              <div className="flex items-center gap-5 pb-0.5">
+                {[
+                  { label: "Humor", value: currentCheckIn.mood },
+                  { label: "Energia", value: currentCheckIn.energy },
+                  { label: "Foco", value: currentCheckIn.focus },
+                ].map((m) => (
+                  <div key={m.label} className="flex flex-col items-center">
+                    <span className="font-semibold text-lg leading-none">{m.value}</span>
+                    <span className="text-[10px] text-ink-faint mt-0.5">{m.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </motion.div>
 
-        <div className="grid lg:grid-cols-[1fr_320px] gap-6">
-          {/* Left column */}
-          <div className="space-y-6">
-            {/* Briefing */}
-            <motion.div variants={fadeUp}>
-              <div className="bg-ink rounded-3xl p-7 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-48 h-48 bg-accent/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">C</span>
-                      </div>
-                      <span className="text-gray-400 text-xs font-medium uppercase tracking-widest">
-                        Briefing de hoje
-                      </span>
-                    </div>
-                    <button
-                      onClick={refreshBriefing}
-                      disabled={briefingLoading}
-                      className="text-gray-600 hover:text-gray-400 transition-colors"
-                    >
-                      <RefreshCw size={14} className={cn(briefingLoading && "animate-spin")} />
-                    </button>
+        {/* Briefing — full width */}
+        <motion.div variants={fadeUp} className="mb-6">
+          <div className="bg-ink rounded-2xl p-6 relative overflow-hidden">
+            <div className="absolute -top-16 -right-16 w-48 h-48 bg-accent/10 rounded-full" />
+            <div className="relative">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
+                    <span className="text-ink text-[10px] font-bold">C</span>
                   </div>
+                  <span className="text-white/30 text-[11px] font-medium uppercase tracking-widest">
+                    Análise do dia
+                  </span>
+                </div>
+                <button
+                  onClick={refreshBriefing}
+                  disabled={briefingLoading}
+                  className="text-white/20 hover:text-white/50 transition-colors"
+                >
+                  <RefreshCw size={13} className={cn(briefingLoading && "animate-spin")} />
+                </button>
+              </div>
+              {briefingLoading ? (
+                <div className="space-y-2">
+                  {[85, 70, 55].map((w, i) => (
+                    <div key={i} className="h-3.5 bg-white/8 rounded-full animate-pulse" style={{ width: `${w}%` }} />
+                  ))}
+                </div>
+              ) : briefing ? (
+                <p className="text-white/80 text-base font-display italic leading-relaxed">
+                  &ldquo;{briefing.content}&rdquo;
+                </p>
+              ) : (
+                <p className="text-white/30 text-sm">
+                  Nenhum briefing disponível.
+                </p>
+              )}
+            </div>
+          </div>
+        </motion.div>
 
-                  {briefingLoading ? (
-                    <div className="space-y-2.5">
-                      {[80, 65, 90, 70].map((w, i) => (
-                        <div key={i} className="h-4 bg-white/10 rounded-full animate-pulse" style={{ width: `${w}%` }} />
-                      ))}
-                    </div>
-                  ) : briefing ? (
-                    <p className="briefing-text text-white/90 text-lg not-italic font-display">
-                      &ldquo;{briefing.content}&rdquo;
-                    </p>
-                  ) : (
-                    <p className="text-gray-600 text-sm italic">
-                      Nenhum briefing disponível. Complete o onboarding para ativar.
-                    </p>
-                  )}
+        {/* Body */}
+        <div className="grid lg:grid-cols-[1fr_268px] gap-5 items-start">
+
+          {/* Left: check-in (se pendente) + tarefas */}
+          <div className="space-y-5">
+            {!currentCheckIn && (
+              <motion.div variants={fadeUp}>
+                <CheckInWidget checkIn={null} onComplete={(ci) => setCurrentCheckIn(ci)} />
+              </motion.div>
+            )}
+
+            <motion.div variants={fadeUp}>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="font-semibold text-sm">Tarefas prioritárias</h2>
+                <div className="flex items-center gap-1 text-[11px] text-ink-faint">
+                  <Zap size={10} className="text-accent" />
+                  ordenado por IA
                 </div>
               </div>
-            </motion.div>
-
-            {/* Check-in */}
-            <motion.div variants={fadeUp}>
-              <CheckInWidget
-                checkIn={currentCheckIn}
-                onComplete={(ci) => setCurrentCheckIn(ci)}
-              />
-            </motion.div>
-
-            {/* Priority tasks */}
-            <motion.div variants={fadeUp}>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-base">Tarefas de hoje</h2>
-                <div className="flex items-center gap-1.5 text-xs text-ink-muted">
-                  <Zap size={12} className="text-accent" />
-                  <span>Ordenado por score IA</span>
-                </div>
-              </div>
-
               {sortedTasks.length === 0 ? (
                 <div className="card p-8 text-center">
                   <p className="text-ink-muted text-sm">Nenhuma tarefa pendente.</p>
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {sortedTasks.slice(0, 6).map((task, i) => (
+                  {sortedTasks.slice(0, 7).map((task, i) => (
                     <motion.div
                       key={task.id}
-                      initial={{ opacity: 0, x: -12 }}
+                      initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.04 }}
                     >
@@ -163,26 +177,53 @@ export default function TodayView(props: Props) {
             </motion.div>
           </div>
 
-          {/* Right column */}
-          <div className="space-y-5">
-            {/* Today's schedule */}
-            <motion.div variants={fadeUp} className="card p-5">
-              <h3 className="font-semibold text-sm mb-4 flex items-center gap-2">
-                <Clock size={15} className="text-ink-muted" />
+          {/* Right: painel unificado */}
+          <motion.div variants={fadeUp} className="card overflow-hidden divide-y divide-border">
+
+            {/* Pulso */}
+            {recentCheckIns.length > 0 && (
+              <div className="p-4">
+                <p className="text-[10px] font-semibold text-ink-faint uppercase tracking-wide mb-3">
+                  Pulso — 7 dias
+                </p>
+                <div className="flex items-end gap-1 h-12">
+                  {recentCheckIns.slice(0, 7).reverse().map((ci, i) => (
+                    <div key={ci.id} className="flex-1 flex flex-col items-center gap-1">
+                      <motion.div
+                        initial={{ height: 0 }}
+                        animate={{ height: `${(ci.energy / 10) * 100}%` }}
+                        transition={{ duration: 0.5, delay: i * 0.04 }}
+                        className={cn(
+                          "w-full rounded-sm min-h-[3px]",
+                          ci.energy >= 7 ? "bg-success" : ci.energy >= 5 ? "bg-accent" : "bg-warning"
+                        )}
+                      />
+                      <span className="text-[9px] text-ink-faint capitalize">
+                        {format(new Date(ci.date), "EEE", { locale: ptBR }).slice(0, 3)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Agenda */}
+            <div className="p-4">
+              <p className="text-[10px] font-semibold text-ink-faint uppercase tracking-wide mb-3">
                 Agenda de hoje
-              </h3>
+              </p>
               {todayEvents.length === 0 ? (
-                <p className="text-ink-faint text-sm text-center py-4">Dia livre de compromissos.</p>
+                <p className="text-ink-faint text-sm">Dia livre.</p>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {todayEvents.map((event) => (
-                    <div key={event.id} className="flex items-start gap-3">
-                      <div className="text-xs text-ink-muted font-mono pt-0.5 w-10 flex-shrink-0">
+                    <div key={event.id} className="flex gap-3 items-start">
+                      <span className="text-[11px] text-ink-faint font-mono pt-px w-9 flex-shrink-0">
                         {format(new Date(event.start_at), "HH:mm")}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">{event.title}</p>
-                        <span className={`pill badge-${event.context_tag} mt-0.5`}>
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium leading-snug truncate">{event.title}</p>
+                        <span className={`pill badge-${event.context_tag} mt-1`}>
                           {event.context_tag}
                         </span>
                       </div>
@@ -190,67 +231,44 @@ export default function TodayView(props: Props) {
                   ))}
                 </div>
               )}
-            </motion.div>
+            </div>
 
-            {/* Goals progress */}
-            <motion.div variants={fadeUp} className="card p-5">
-              <h3 className="font-semibold text-sm mb-4">Metas ativas</h3>
+            {/* Metas */}
+            <div className="p-4">
+              <p className="text-[10px] font-semibold text-ink-faint uppercase tracking-wide mb-3">
+                Metas ativas
+              </p>
               {goals.length === 0 ? (
-                <p className="text-ink-faint text-sm text-center py-4">
-                  <a href="/goals" className="text-accent hover:underline">Adicionar primeira meta</a>
-                </p>
+                <p className="text-ink-faint text-sm">Nenhuma meta ativa.</p>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3.5">
                   {goals.slice(0, 4).map((goal) => (
                     <div key={goal.id}>
                       <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm font-medium truncate flex-1">{goal.title}</p>
-                        <span className="text-xs text-ink-muted ml-2">{goal.progress}%</span>
+                        <p className="text-sm leading-snug truncate flex-1">{goal.title}</p>
+                        <span className="text-xs font-medium text-ink-muted ml-2 flex-shrink-0">
+                          {goal.progress}%
+                        </span>
                       </div>
-                      <div className="h-1.5 bg-surface-raised rounded-full overflow-hidden">
+                      <div className="h-1 bg-surface-raised rounded-full overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${goal.progress}%` }}
-                          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+                          transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
                           className="h-full bg-accent rounded-full"
                         />
                       </div>
                       {goal.days_stalled > 3 && (
-                        <p className="text-xs text-warning mt-0.5">
-                          Parada há {goal.days_stalled} dias
+                        <p className="text-[11px] text-warning mt-0.5">
+                          Parada há {goal.days_stalled}d
                         </p>
                       )}
                     </div>
                   ))}
                 </div>
               )}
-            </motion.div>
-
-            {/* Energy trend */}
-            {recentCheckIns.length > 0 && (
-              <motion.div variants={fadeUp} className="card p-5">
-                <h3 className="font-semibold text-sm mb-3">Energia (7 dias)</h3>
-                <div className="flex items-end gap-1.5 h-16">
-                  {recentCheckIns.slice(0, 7).reverse().map((ci, i) => (
-                    <div key={ci.id} className="flex-1 flex flex-col items-center gap-1">
-                      <motion.div
-                        initial={{ height: 0 }}
-                        animate={{ height: `${(ci.energy / 10) * 100}%` }}
-                        transition={{ duration: 0.5, delay: i * 0.05 }}
-                        className={cn(
-                          "w-full rounded-t-sm min-h-[4px]",
-                          ci.energy >= 7 ? "bg-success" : ci.energy >= 5 ? "bg-accent" : "bg-warning"
-                        )}
-                      />
-                      <span className="text-[9px] text-ink-faint">
-                        {format(new Date(ci.date), "dd/MM")}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </div>
+            </div>
+          </motion.div>
         </div>
       </motion.div>
     </div>
