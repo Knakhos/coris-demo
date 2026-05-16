@@ -99,22 +99,22 @@ export default function TodayView(props: Props) {
 
         {/* Briefing — full width */}
         <motion.div variants={fadeUp} className="mb-6">
-          <div className="bg-ink rounded-2xl p-6 relative overflow-hidden">
-            <div className="absolute -top-16 -right-16 w-48 h-48 bg-accent/10 rounded-full" />
+          <div className="bg-black/25 backdrop-blur-xl border border-black/[0.12] rounded-2xl p-6 relative overflow-hidden">
+            <div className="absolute -top-16 -right-16 w-48 h-48 bg-accent/8 rounded-full" />
             <div className="relative">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-5 h-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
                     <span className="text-ink text-[10px] font-bold">C</span>
                   </div>
-                  <span className="text-white/30 text-[11px] font-medium uppercase tracking-widest">
+                  <span className="text-ink/40 text-[11px] font-medium uppercase tracking-widest">
                     Análise do dia
                   </span>
                 </div>
                 <button
                   onClick={refreshBriefing}
                   disabled={briefingLoading}
-                  className="text-white/20 hover:text-white/50 transition-colors"
+                  className="text-ink/25 hover:text-ink/50 transition-colors"
                 >
                   <RefreshCw size={13} className={cn(briefingLoading && "animate-spin")} />
                 </button>
@@ -122,15 +122,15 @@ export default function TodayView(props: Props) {
               {briefingLoading ? (
                 <div className="space-y-2">
                   {[85, 70, 55].map((w, i) => (
-                    <div key={i} className="h-3.5 bg-white/8 rounded-full animate-pulse" style={{ width: `${w}%` }} />
+                    <div key={i} className="h-3.5 bg-black/10 rounded-full animate-pulse" style={{ width: `${w}%` }} />
                   ))}
                 </div>
               ) : briefing ? (
-                <p className="text-white/80 text-base font-display italic leading-relaxed">
+                <p className="text-ink/75 text-base font-display italic leading-relaxed">
                   &ldquo;{briefing.content}&rdquo;
                 </p>
               ) : (
-                <p className="text-white/30 text-sm">
+                <p className="text-ink/35 text-sm">
                   Nenhum briefing disponível.
                 </p>
               )}
