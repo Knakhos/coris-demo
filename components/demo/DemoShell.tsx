@@ -33,9 +33,9 @@ export default function DemoShell({
   }, [profile, setProfile])
 
   return (
-    <div className="flex h-screen overflow-hidden bg-base">
+    <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-52 flex flex-col py-6 border-r border-border bg-white flex-shrink-0 z-20">
+      <aside className="w-52 flex flex-col py-6 border-r border-white/50 bg-white/50 backdrop-blur-2xl flex-shrink-0 z-20">
         <div className="px-5 mb-8">
           <span className="font-sans text-xl font-bold text-ink tracking-tight">Coris</span>
         </div>

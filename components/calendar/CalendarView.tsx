@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import {
   format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay,
   isSameMonth, isToday, startOfWeek, endOfWeek, addMonths, subMonths, parseISO
@@ -12,7 +12,17 @@ import type { CalendarEvent, ContextTag } from "@/types"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils/cn"
 
-const contextColors: Record<string, string> = {
+const contextChip: Record<string, string> = {
+  work: "bg-blue-100/80 text-blue-700",
+  health: "bg-green-100/80 text-green-700",
+  creativity: "bg-purple-100/80 text-purple-700",
+  social: "bg-orange-100/80 text-orange-700",
+  learning: "bg-yellow-100/80 text-yellow-700",
+  finance: "bg-emerald-100/80 text-emerald-700",
+  personal: "bg-gray-100/80 text-gray-600",
+}
+
+const contextDot: Record<string, string> = {
   work: "bg-blue-400",
   health: "bg-green-400",
   creativity: "bg-purple-400",
@@ -92,93 +102,110 @@ export default function CalendarView({ events: initialEvents, tasks }: Props) {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="px-8 py-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
         <h1 className="font-sans text-4xl font-bold tracking-tight">Calendário</h1>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
           className="btn-primary flex items-center gap-2"
         >
-          {showAddForm ? <X size={16} /> : <Plus size={16} />}
+          {showAddForm ? <X size={15} /> : <Plus size={15} />}
           Novo evento
         </button>
       </div>
 
-      {showAddForm && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          className="card p-5 mb-6 space-y-4"
-        >
-          <input
-            type="text"
-            value={form.title}
-            onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-            placeholder="Título do evento"
-            className="input"
-            autoFocus
-          />
-          <div className="grid grid-cols-3 gap-3">
-            <div>
-              <label className="text-xs text-ink-muted mb-1 block">Data</label>
-              <input type="date" value={form.date} onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))} className="input" />
+      {/* Add form */}
+      <AnimatePresence>
+        {showAddForm && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="card p-5 mb-6 space-y-4"
+          >
+            <input
+              type="text"
+              value={form.title}
+              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              placeholder="Título do evento"
+              className="input"
+              autoFocus
+            />
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <label className="text-xs text-ink-muted mb-1 block">Data</label>
+                <input type="date" value={form.date} onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))} className="input" />
+              </div>
+              <div>
+                <label className="text-xs text-ink-muted mb-1 block">Início</label>
+                <input type="time" value={form.start_time} onChange={(e) => setForm((f) => ({ ...f, start_time: e.target.value }))} className="input" />
+              </div>
+              <div>
+                <label className="text-xs text-ink-muted mb-1 block">Fim</label>
+                <input type="time" value={form.end_time} onChange={(e) => setForm((f) => ({ ...f, end_time: e.target.value }))} className="input" />
+              </div>
             </div>
-            <div>
-              <label className="text-xs text-ink-muted mb-1 block">Início</label>
-              <input type="time" value={form.start_time} onChange={(e) => setForm((f) => ({ ...f, start_time: e.target.value }))} className="input" />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-ink-muted mb-1 block">Contexto</label>
+                <select value={form.context_tag} onChange={(e) => setForm((f) => ({ ...f, context_tag: e.target.value as ContextTag }))} className="input">
+                  {Object.keys(contextChip).map((t) => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+              <div className="flex items-center gap-2 mt-5">
+                <input type="checkbox" id="protected" checked={form.is_protected} onChange={(e) => setForm((f) => ({ ...f, is_protected: e.target.checked }))} />
+                <label htmlFor="protected" className="text-sm text-ink-muted">IA não move este evento</label>
+              </div>
             </div>
-            <div>
-              <label className="text-xs text-ink-muted mb-1 block">Fim</label>
-              <input type="time" value={form.end_time} onChange={(e) => setForm((f) => ({ ...f, end_time: e.target.value }))} className="input" />
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowAddForm(false)} className="btn-ghost">Cancelar</button>
+              <button onClick={handleAdd} disabled={adding || !form.title.trim()} className="btn-primary">
+                {adding ? "Criando..." : "Criar evento"}
+              </button>
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs text-ink-muted mb-1 block">Contexto</label>
-              <select value={form.context_tag} onChange={(e) => setForm((f) => ({ ...f, context_tag: e.target.value as ContextTag }))} className="input">
-                {Object.keys(contextColors).map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-            <div className="flex items-center gap-2 mt-5">
-              <input type="checkbox" id="protected" checked={form.is_protected} onChange={(e) => setForm((f) => ({ ...f, is_protected: e.target.checked }))} />
-              <label htmlFor="protected" className="text-sm">Evento protegido (IA não move)</label>
-            </div>
-          </div>
-          <div className="flex justify-end gap-3">
-            <button onClick={() => setShowAddForm(false)} className="btn-ghost">Cancelar</button>
-            <button onClick={handleAdd} disabled={adding || !form.title.trim()} className="btn-primary">
-              {adding ? "Adicionando..." : "Criar evento"}
-            </button>
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="grid lg:grid-cols-[1fr_280px] gap-6">
-        {/* Calendar grid */}
-        <div className="card p-5">
+      {/* Main layout */}
+      <div className="grid lg:grid-cols-[1fr_256px] gap-6 items-start">
+
+        {/* Calendar — sem card externo */}
+        <div>
           {/* Month nav */}
-          <div className="flex items-center justify-between mb-5">
-            <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-raised transition-colors">
+          <div className="flex items-center justify-between mb-4 px-1">
+            <button
+              onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+              className="w-8 h-8 rounded-xl flex items-center justify-center text-ink-muted
+                         hover:bg-white/70 hover:text-ink transition-all"
+            >
               <ChevronLeft size={16} />
             </button>
-            <h2 className="font-semibold capitalize">
+            <h2 className="font-semibold text-base capitalize">
               {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
             </h2>
-            <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-raised transition-colors">
+            <button
+              onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+              className="w-8 h-8 rounded-xl flex items-center justify-center text-ink-muted
+                         hover:bg-white/70 hover:text-ink transition-all"
+            >
               <ChevronRight size={16} />
             </button>
           </div>
 
-          {/* Week days */}
-          <div className="grid grid-cols-7 mb-2">
+          {/* Weekday headers */}
+          <div className="grid grid-cols-7 mb-1.5">
             {weekDays.map((d) => (
-              <div key={d} className="text-center text-xs text-ink-faint font-medium py-1">{d}</div>
+              <div key={d} className="text-center text-[11px] text-ink-faint font-medium py-1.5">
+                {d}
+              </div>
             ))}
           </div>
 
-          {/* Days */}
-          <div className="grid grid-cols-7 gap-px bg-border rounded-xl overflow-hidden">
+          {/* Day cells */}
+          <div className="grid grid-cols-7 gap-1">
             {days.map((day) => {
               const dayEvents = getDayEvents(day)
               const isSelected = selectedDay && isSameDay(day, selectedDay)
@@ -186,19 +213,26 @@ export default function CalendarView({ events: initialEvents, tasks }: Props) {
               const todayDay = isToday(day)
 
               return (
-                <button
+                <motion.button
                   key={day.toISOString()}
                   onClick={() => setSelectedDay(day)}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.12 }}
                   className={cn(
-                    "bg-white p-2 min-h-[72px] text-left transition-colors hover:bg-surface-raised",
-                    !isCurrentMonth && "bg-gray-50/50",
-                    isSelected && "bg-accent-light ring-2 ring-inset ring-accent/30"
+                    "rounded-xl p-2 min-h-[88px] text-left transition-all duration-150",
+                    "bg-white/45 backdrop-blur-sm border border-white/60",
+                    "hover:bg-white/70 hover:border-white/80",
+                    !isCurrentMonth && "opacity-35",
+                    isSelected && "bg-accent/12 border-accent/40 shadow-sm ring-1 ring-accent/20"
                   )}
                 >
                   <span className={cn(
-                    "text-xs font-medium w-6 h-6 flex items-center justify-center rounded-full mb-1",
-                    todayDay && "bg-accent text-white",
-                    !isCurrentMonth && "text-ink-faint"
+                    "text-xs font-medium w-6 h-6 flex items-center justify-center rounded-full mb-1.5 transition-all",
+                    todayDay && "bg-accent text-ink font-semibold",
+                    !todayDay && isSelected && "text-ink font-semibold",
+                    !todayDay && !isSelected && !isCurrentMonth && "text-ink-faint",
+                    !todayDay && !isSelected && isCurrentMonth && "text-ink-muted"
                   )}>
                     {format(day, "d")}
                   </span>
@@ -206,62 +240,85 @@ export default function CalendarView({ events: initialEvents, tasks }: Props) {
                     {dayEvents.slice(0, 2).map((e) => (
                       <div
                         key={e.id}
-                        className={cn("text-[10px] px-1 py-0.5 rounded truncate text-white", contextColors[e.context_tag])}
+                        className={cn(
+                          "text-[10px] px-1.5 py-0.5 rounded-md truncate font-medium leading-snug",
+                          contextChip[e.context_tag]
+                        )}
                       >
                         {e.title}
                       </div>
                     ))}
                     {dayEvents.length > 2 && (
-                      <div className="text-[10px] text-ink-faint px-1">+{dayEvents.length - 2}</div>
+                      <div className="text-[10px] text-ink-faint pl-1">
+                        +{dayEvents.length - 2}
+                      </div>
                     )}
                   </div>
-                </button>
+                </motion.button>
               )
             })}
           </div>
         </div>
 
         {/* Day detail */}
-        <div className="space-y-4">
-          {selectedDay && (
-            <div className="card p-5">
-              <h3 className="font-semibold text-sm mb-1 capitalize">
-                {format(selectedDay, "EEEE, d 'de' MMMM", { locale: ptBR })}
-              </h3>
+        <div className="sticky top-8">
+          <AnimatePresence mode="wait">
+            {selectedDay && (
+              <motion.div
+                key={selectedDay.toISOString()}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2 }}
+                className="card p-5"
+              >
+                <p className="text-[10px] font-semibold text-ink-faint uppercase tracking-wide mb-1">
+                  {format(selectedDay, "EEEE", { locale: ptBR })}
+                </p>
+                <p className="font-semibold text-lg leading-tight mb-4">
+                  {format(selectedDay, "d 'de' MMMM", { locale: ptBR })}
+                </p>
 
-              {selectedDayEvents.length === 0 && selectedDayTasks.length === 0 ? (
-                <p className="text-ink-faint text-sm py-4">Dia sem compromissos.</p>
-              ) : (
-                <div className="space-y-2 mt-3">
-                  {selectedDayEvents.map((e) => (
-                    <div key={e.id} className="flex items-start gap-2">
-                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", contextColors[e.context_tag])} />
-                      <div>
-                        <p className="text-sm font-medium">{e.title}</p>
-                        <p className="text-xs text-ink-faint">
-                          {format(parseISO(e.start_at), "HH:mm")} – {format(parseISO(e.end_at), "HH:mm")}
-                          {e.is_protected && " · Protegido"}
-                        </p>
+                {selectedDayEvents.length === 0 && selectedDayTasks.length === 0 ? (
+                  <p className="text-ink-faint text-sm py-2">Sem compromissos.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {selectedDayEvents.map((e) => (
+                      <div key={e.id} className="flex items-start gap-2.5">
+                        <div className={cn(
+                          "w-2 h-2 rounded-full mt-1.5 flex-shrink-0",
+                          contextDot[e.context_tag]
+                        )} />
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium leading-snug">{e.title}</p>
+                          <p className="text-[11px] text-ink-faint mt-0.5">
+                            {format(parseISO(e.start_at), "HH:mm")} – {format(parseISO(e.end_at), "HH:mm")}
+                            {e.is_protected && <span className="ml-1 text-accent">· protegido</span>}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                  {selectedDayTasks.length > 0 && (
-                    <>
-                      <div className="border-t border-border pt-2 mt-2">
-                        <p className="text-xs text-ink-faint mb-2">Tarefas com prazo</p>
+                    ))}
+
+                    {selectedDayTasks.length > 0 && (
+                      <div className={cn(
+                        selectedDayEvents.length > 0 && "border-t border-white/50 pt-3 mt-1"
+                      )}>
+                        <p className="text-[10px] font-semibold text-ink-faint uppercase tracking-wide mb-2">
+                          Prazos
+                        </p>
                         {selectedDayTasks.map((t) => (
-                          <div key={t.id} className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-sm border border-border" />
-                            <p className="text-sm">{t.title}</p>
+                          <div key={t.id} className="flex items-center gap-2 mb-1.5">
+                            <div className="w-3.5 h-3.5 rounded-sm border border-border/60 flex-shrink-0" />
+                            <p className="text-sm text-ink-muted leading-snug">{t.title}</p>
                           </div>
                         ))}
                       </div>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
+                    )}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
