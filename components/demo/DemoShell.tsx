@@ -44,7 +44,7 @@ export default function DemoShell({
           width: "860px",
           height: "860px",
           borderRadius: "50%",
-          background: "radial-gradient(circle at center, rgba(255,112,36,0.22) 0%, rgba(255,145,60,0.10) 42%, transparent 68%)",
+          background: "radial-gradient(circle at center, rgba(255,112,36,0.42) 0%, rgba(255,145,60,0.20) 42%, transparent 68%)",
         }}
       />
 
@@ -58,7 +58,7 @@ export default function DemoShell({
           width: "780px",
           height: "780px",
           borderRadius: "50%",
-          background: "radial-gradient(circle at center, rgba(255,120,40,0.18) 0%, rgba(255,150,70,0.08) 44%, transparent 68%)",
+          background: "radial-gradient(circle at center, rgba(255,120,40,0.36) 0%, rgba(255,150,70,0.16) 44%, transparent 68%)",
         }}
       />
 
