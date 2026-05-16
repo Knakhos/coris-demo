@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.75rem;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #FAFAF9;
+    color: #0A0A0A;
+  }
+
+  ::selection {
+    background-color: #DBEAFE;
+    color: #1e40af;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: 'Instrument Serif', Georgia, serif;
+  }
+
+  .card {
+    @apply bg-white border border-border rounded-2xl shadow-card;
+  }
+
+  .card-hover {
+    @apply card transition-shadow duration-200 hover:shadow-card-hover;
+  }
+
+  .btn-primary {
+    @apply bg-accent text-white px-5 py-2.5 rounded-xl font-medium text-sm
+           hover:bg-blue-700 active:scale-[0.98] transition-all duration-150
+           disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-surface-raised text-ink px-5 py-2.5 rounded-xl font-medium text-sm
+           hover:bg-gray-100 active:scale-[0.98] transition-all duration-150
+           border border-border;
+  }
+
+  .btn-ghost {
+    @apply text-ink-muted px-4 py-2 rounded-xl font-medium text-sm
+           hover:bg-surface-raised active:scale-[0.98] transition-all duration-150;
+  }
+
+  .input {
+    @apply w-full px-4 py-3 rounded-xl border border-border bg-white text-ink
+           placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-accent/20
+           focus:border-accent transition-all duration-150 text-sm;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  .badge-work { @apply bg-blue-50 text-blue-700; }
+  .badge-health { @apply bg-green-50 text-green-700; }
+  .badge-creativity { @apply bg-purple-50 text-purple-700; }
+  .badge-social { @apply bg-orange-50 text-orange-700; }
+  .badge-learning { @apply bg-yellow-50 text-yellow-700; }
+  .badge-finance { @apply bg-emerald-50 text-emerald-700; }
+  .badge-personal { @apply bg-gray-100 text-gray-700; }
+}
+
+/* Typing animation for AI chat */
+.typing-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: typing 1.2s ease-in-out infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* Prose for AI briefing */
+.briefing-text {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #0A0A0A;
+  font-style: italic;
+}
+
+/* Progress bar animations */
+@keyframes fillBar {
+  from { width: 0; }
+  to { width: var(--target-width); }
+}
+
+.progress-animated {
+  animation: fillBar 0.8s ease-out forwards;
+}

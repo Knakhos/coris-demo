@@ -1,0 +1,67 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        display: ["Instrument Serif", "Georgia", "serif"],
+        sans: ["DM Sans", "system-ui", "sans-serif"],
+      },
+      colors: {
+        base: "#FAFAF9",
+        ink: "#0A0A0A",
+        "ink-muted": "#6B6B6B",
+        "ink-faint": "#A8A8A8",
+        accent: "#2563EB",
+        "accent-light": "#EEF4FF",
+        "accent-dim": "#93C5FD",
+        border: "rgba(0,0,0,0.08)",
+        "border-strong": "rgba(0,0,0,0.14)",
+        surface: "#FFFFFF",
+        "surface-raised": "#F5F5F3",
+        danger: "#EF4444",
+        "danger-light": "#FEF2F2",
+        success: "#10B981",
+        "success-light": "#ECFDF5",
+        warning: "#F59E0B",
+        "warning-light": "#FFFBEB",
+      },
+      boxShadow: {
+        card: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+        "card-hover": "0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04)",
+        float: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)",
+        modal: "0 24px 64px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.08)",
+      },
+      borderRadius: {
+        "4xl": "2rem",
+      },
+      animation: {
+        "fade-in": "fadeIn 0.3s ease-out",
+        "slide-up": "slideUp 0.4s ease-out",
+        "pulse-soft": "pulseSoft 2s ease-in-out infinite",
+      },
+      keyframes: {
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        slideUp: {
+          from: { opacity: "0", transform: "translateY(12px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        pulseSoft: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;
