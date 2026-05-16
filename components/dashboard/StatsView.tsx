@@ -131,7 +131,7 @@ Formato: narrativo, direto, analítico. 4-6 parágrafos.`,
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8">
+    <div className="max-w-6xl px-8 py-8">
       <motion.div initial="hidden" animate="visible" variants={stagger}>
         <motion.div variants={fadeUp} className="mb-8">
           <h1 className="font-title text-4xl font-bold tracking-tight">Estatísticas</h1>

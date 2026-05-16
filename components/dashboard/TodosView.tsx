@@ -84,7 +84,7 @@ export default function TodosView({ initialTasks, goals, currentEnergy }: Props)
   const doneCount = tasks.filter((t) => t.status === "done").length
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-8">
+    <div className="max-w-5xl px-8 py-8">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="font-title text-4xl font-bold tracking-tight">To-Do</h1>

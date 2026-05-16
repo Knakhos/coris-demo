@@ -68,7 +68,7 @@ export default function TodayView(props: Props) {
   }
 
   return (
-    <div className="px-8 py-8 max-w-5xl mx-auto">
+    <div className="px-8 py-8 max-w-6xl">
       <motion.div initial="hidden" animate="visible" variants={stagger}>
 
         {/* Header */}
