@@ -14,7 +14,7 @@ const navItems = [
   { href: "/demo/todos", icon: CheckSquare, label: "To-Do" },
   { href: "/demo/goals", icon: Target, label: "Metas" },
   { href: "/demo/calendar", icon: Calendar, label: "Calendário" },
-  { href: "/demo/stats", icon: BarChart3, label: "Stats" },
+  { href: "/demo/stats", icon: BarChart3, label: "Alma" },
 ]
 
 export default function DemoShell({
@@ -57,7 +57,7 @@ export default function DemoShell({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 text-sm font-medium",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 text-sm font-medium italic",
                   isActive
                     ? "bg-accent text-ink font-semibold"
                     : "text-ink-muted hover:bg-surface-raised hover:text-ink"
