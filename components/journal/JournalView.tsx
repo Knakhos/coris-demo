@@ -131,7 +131,7 @@ export default function JournalView() {
   }
 
   return (
-    <div className="max-w-6xl px-8 py-8">
+    <div className="px-8 py-8">
       <motion.div initial="hidden" animate="visible" variants={stagger}>
 
         <motion.div variants={fadeUp} className="mb-6 flex items-end justify-between">

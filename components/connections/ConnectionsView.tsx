@@ -82,7 +82,7 @@ export default function ConnectionsView() {
   }
 
   return (
-    <div className="max-w-6xl px-8 py-8">
+    <div className="px-8 py-8">
       <motion.div initial="hidden" animate="visible" variants={stagger}>
 
         {/* Header */}
@@ -112,7 +112,7 @@ export default function ConnectionsView() {
         </motion.div>
 
         {/* Grid */}
-        <motion.div variants={fadeUp} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <motion.div variants={fadeUp} className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filtered.map((integration) => (
             <motion.div
               key={integration.id}

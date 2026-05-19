@@ -68,7 +68,7 @@ export default function TodayView(props: Props) {
   }
 
   return (
-    <div className="px-8 py-8 max-w-6xl">
+    <div className="px-8 py-8">
       <motion.div initial="hidden" animate="visible" variants={stagger}>
 
         {/* Header */}
@@ -132,7 +132,7 @@ export default function TodayView(props: Props) {
         </motion.div>
 
         {/* Body */}
-        <div className="grid lg:grid-cols-[480px_1fr_1fr] gap-5 items-start">
+        <div className="grid lg:grid-cols-[420px_1fr_1fr] xl:grid-cols-[520px_1fr_1fr] 2xl:grid-cols-[600px_1fr_1fr] gap-5 items-start">
 
           {/* Col 1: check-in + tarefas */}
           <div className="space-y-5">
