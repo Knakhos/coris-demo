@@ -43,6 +43,7 @@ export default function DemoShell({
         fill
         className="object-cover object-center"
         style={{ zIndex: -2 }}
+        quality={100}
         priority
       />
       <div className="absolute inset-0 bg-white/55" style={{ zIndex: -1 }} />
