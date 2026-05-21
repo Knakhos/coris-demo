@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
+import Image from "next/image"
 import { Sun, CheckSquare, Target, Calendar, Sparkles, MessageCircle, AlertTriangle, Plug, BookOpen } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import type { UserProfile } from "@/types"
@@ -35,16 +36,16 @@ export default function DemoShell({
   }, [profile, setProfile])
 
   return (
-    <div
-      className="flex h-screen overflow-hidden"
-      style={{
-        background: `
-          radial-gradient(ellipse 78% 65% at 102% -4%, rgba(255,90,0,0.75) 0%, rgba(255,140,0,0.32) 45%, transparent 72%),
-          radial-gradient(ellipse 64% 65% at -4% 104%, rgba(255,90,0,0.68) 0%, rgba(255,140,0,0.26) 45%, transparent 72%),
-          #FFFFFF
-        `,
-      }}
-    >
+    <div className="relative flex h-screen overflow-hidden">
+      <Image
+        src="/bg.png"
+        alt=""
+        fill
+        className="object-cover object-center"
+        style={{ zIndex: -2 }}
+        priority
+      />
+      <div className="absolute inset-0 bg-white/55" style={{ zIndex: -1 }} />
 
       {/* Sidebar */}
       <aside className="w-52 flex flex-col py-6 bg-transparent flex-shrink-0 z-20">
